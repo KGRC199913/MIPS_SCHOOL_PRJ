@@ -14,9 +14,6 @@ read_n:
  
 allocate_array:
 	li	$v0, 9
-	li	$s0, 4
-	multu	$s0, $t0
-	mflo	$a1	
 	syscall
 	jr	$ra 
 
@@ -135,6 +132,7 @@ main:
 	li	$s0, 4
 	multu	$t0, $s0
 	mflo	$t0		# $t0 is n * 4, is the byte size of the array
+	add	$a0, $t0, $0
 	jal	allocate_array
 	move	$t1, $v0	# $t1 now contains address of the allocated array
 	jal	read_n_element
