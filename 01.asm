@@ -125,6 +125,49 @@ find_ele_pos_loop:
 	subi	$v0, $v0, 1
 	jr	$ra
 
+check_prime:
+	blt	$a0, 2, end_check_prime_false
+	sra	$s0, $a0, 1
+	li	$t2, 2
+check_prime_loop:
+	blt	$s0, $t2, end_check_prime_true
+	div	$a0, $t2
+	mfhi	$s1
+	beqz	$s1, end_check_prime_false
+	add	$t2, $t2, 1
+	j	check_prime_loop
+
+end_check_prime_false:
+	li	$v0, 0
+	jr	$ra
+end_check_prime_true:
+	li	$v0, 1
+	jr	$ra
+
+print_all_prime:
+	li	$t2, 0
+	addi	$sp, $sp, -4
+	sw	$ra, 0($sp)
+print_all_prime_loop:
+	ble	$t0, $t2, end_func_use_stack
+	add	$t3, $t2, $t1
+	lw	$a0, ($t3)
+	addi	$t2, $t2, 4
+	addi	$sp, $sp, -4
+	sw	$t2, 0($sp)
+	jal 	check_prime
+	lw	$t2, 0($sp)
+	addi	$sp, $sp, 4
+	beq	$v0, 1, is_prime
+	j	print_all_prime_loop	
+is_prime:
+	jal	print_ele
+	j 	print_all_prime_loop
+end_func_use_stack:
+	lw	$ra, ($sp)
+	addi	$sp, $sp, 4
+	jr	$ra
+
 .globl main
 main:
 	jal read_n
@@ -156,6 +199,8 @@ L2:
 	jal 	print_ele
 	j	handle_menu
 L3:
+	jal	print_all_prime
+	j	handle_menu
 L4:
 	jal	find_max
 	move	$a0, $v0
