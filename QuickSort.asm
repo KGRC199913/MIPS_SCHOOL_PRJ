@@ -174,7 +174,8 @@ ints_to_str: # a0: address of int arr, a1: bytes size
 	addi		$t8, $0, 0
 	addi		$s3, $0, 48
 	addi		$sp, $sp, -1
-	sb		$0,  0($sp)
+	li		$at, -1
+	sb		$at,  0($sp)
 huge_loop:
 	beq		$s0, $a1, return #a1 number of byte read
 	add		$t1, $t0, $s0
@@ -204,7 +205,8 @@ string_process:
 	addi		$s7, $s7, 1
 not_negative_string_process:
 	lb		$s6, 0($sp)
-	beq		$s6, $0, cut_number
+	li		$t4, -1
+	beq		$s6, $t4, cut_number
 	addi		$sp, $sp, 1
 	add		$a2, $v0, $t8
 	addi		$t8, $t8, 1
